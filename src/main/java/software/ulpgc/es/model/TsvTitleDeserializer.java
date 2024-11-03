@@ -1,3 +1,5 @@
+package software.ulpgc.es.model;
+
 public class TsvTitleDeserializer implements TitleDeserializer {
     @Override
     public Title deserialize(String line) {

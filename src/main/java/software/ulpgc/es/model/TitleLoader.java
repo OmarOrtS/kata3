@@ -1,3 +1,5 @@
+package software.ulpgc.es.model;
+
 import java.io.IOException;
 import java.util.List;
 

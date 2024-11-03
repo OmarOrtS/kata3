@@ -1,3 +1,5 @@
+package software.ulpgc.es.model;
+
 public class Title {
 
         private final String title;
@@ -30,7 +32,7 @@ public class Title {
 
         @Override
         public String toString() {
-            return "Title{" +
+            return "software.ulpgc.es.model.Title{" +
                     "title='" + title + '\'' +
                     ", year=" + year +
                     ", duration=" + duration +
