@@ -67,14 +67,14 @@ public class MainFrame extends JFrame{
     }
 
     private JComboBox<String> comboBox() {
-        JComboBox<String> combobox = new JComboBox<>();
-        for (String genre : genres) combobox.addItem(genre);
-        combobox.addActionListener(e -> {
-            String selectedGenre = (String) combobox.getSelectedItem();
+        comboBox = new JComboBox<>();
+        for (String genre : genres) comboBox.addItem(genre);
+        comboBox.addActionListener(e -> {
+            String selectedGenre = (String) comboBox.getSelectedItem();
             commands.get("select").execute(selectedGenre, counts.get(selectedGenre));
         });
 
-        return combobox;
+        return comboBox;
     }
 
     private JPanel barchartDisplay() {
