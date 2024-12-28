@@ -1,44 +1,35 @@
+import software.ulpgc.es.Factories.MainFrameSelectCommandFactory;
+import software.ulpgc.es.Factories.MainFrameToggleCommandFactory;
+import software.ulpgc.es.control.Command;
+import software.ulpgc.es.view.BarchartDisplay;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainFrame extends JFrame{
-    private final Map<String, String> moviesGenres;
-    private final Map<String, Command> commands;
+public class MainFrame extends JFrame {
+    private final Map<String, Command> commands = new HashMap<>();
+    private final Map<String, Integer> counts;
     private BarchartDisplay barchartDisplay;
     private final List<String> genres;
     private JComboBox<String> comboBox;
-    private Map<String, Integer> counts;
+    private final Map<String, String> moviesGenres;
 
     public MainFrame(Map<String, String> moviesGenres) {
         this.setTitle("Statistics");
         this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
         this.moviesGenres = moviesGenres;
-        this.genres = new ArrayList<>();
-        this.commands = new HashMap<>();
         this.add(barchartDisplay());
+        this.genres = new ArrayList<>();
         this.add(menu(), BorderLayout.NORTH);
         this.counts = new HashMap<>();
         genreCount();
-
-    }
-
-    public void addGenres(List<String> genres){
-        this.genres.addAll(genres);
-        updateComboBox();
-    }
-
-    private void updateComboBox() {
-        comboBox.removeAllItems();
-        genres.forEach(genre -> comboBox.addItem(genre));
+        new MainFrameToggleCommandFactory(commands, counts, barchartDisplay).addCommand();
     }
 
     private void genreCount() {
@@ -48,30 +39,37 @@ public class MainFrame extends JFrame{
         }
     }
 
+    public void addGenres(List<String> genres){
+        this.genres.addAll(genres);
+        updateComboBox();
+    }
+
+    private void updateComboBox() {
+        comboBox.removeAllItems();
+        for (String genre : genres) comboBox.addItem(genre);
+    }
+
     private JPanel menu() {
-         JPanel panel = new JPanel(new FlowLayout());
-         panel.add(comboBox());
-         panel.add(toggle());
-         return panel;
+        JPanel panel = new JPanel(new FlowLayout());
+        panel.add(comboBox());
+        panel.add(toggle());
+        return panel;
     }
 
     private JButton toggle() {
         JButton toggle = new JButton("toggle");
-        toggle.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                commands.get("toggle").execute(counts);
-            }
-        });
+        toggle.addActionListener(e -> commands.get("toggle").execute());
         return toggle;
     }
 
     private JComboBox<String> comboBox() {
         comboBox = new JComboBox<>();
+
         for (String genre : genres) comboBox.addItem(genre);
         comboBox.addActionListener(e -> {
             String selectedGenre = (String) comboBox.getSelectedItem();
-            commands.get("select").execute(selectedGenre, counts.get(selectedGenre));
+            new MainFrameSelectCommandFactory(commands,selectedGenre,counts.get(selectedGenre),barchartDisplay).addCommand();
+            commands.get("select "+selectedGenre).execute();
         });
 
         return comboBox;
@@ -83,7 +81,4 @@ public class MainFrame extends JFrame{
         return display;
     }
 
-    public BarchartDisplay getBarchartDisplay() { return barchartDisplay; }
-
-    public Command put(String key, Command value) { return commands.put(key, value); }
 }

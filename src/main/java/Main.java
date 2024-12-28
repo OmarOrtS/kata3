@@ -24,11 +24,9 @@ public class Main {
                 "Game-Show", "Fantasy"
         ));
 
-        MainFrame mainframe = new MainFrame(moviesGenres);
-        mainframe.put("select", new SelectCommand(mainframe.getBarchartDisplay()));
-        mainframe.put("toggle", new ToggleCommand(mainframe.getBarchartDisplay()));
-        mainframe.addGenres(genres);
-        mainframe.setVisible(true);
+        MainFrame mainFrame = new MainFrame(moviesGenres);
+        mainFrame.addGenres(genres);
+        mainFrame.setVisible(true);
 
     }
 
